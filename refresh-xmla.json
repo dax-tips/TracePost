@@ -1,0 +1,13 @@
+{
+    "sequence": {
+        "maxParallelism": 8,
+        "operations": [{
+            "refresh": {
+                "type": "full",
+                "objects": [{
+                    "database": "AdventureWorksDW"
+                }]
+            }
+        }]
+    }
+}
