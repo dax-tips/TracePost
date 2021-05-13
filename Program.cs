@@ -42,9 +42,10 @@ namespace TracePost
         static HttpClient client = new HttpClient();
         static int BatchSleepTime = 5000;
         static int rowsPerPost = 500;
-        private const string pushDatasetName = "ASTracePushDataset";
         private const string pushDatasetTableName = "Trace";
         private const string eventHubName = "tracepost";
+
+        
         static string workspaceId;
         static string pushDatasetId;
 
@@ -56,10 +57,15 @@ namespace TracePost
                         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
 
         private static string workspaceName;
+        private static bool clearDataSetOnStart;
+        private static string pushDatasetName ;
         static void Main(string[] args)
         {
 
-            workspaceName = configuration.GetSection("WorkspaceNames:workspaceName").Value;
+            workspaceName = configuration.GetSection("PushDataset:workspaceName").Value;
+            pushDatasetName = configuration.GetSection("PushDataset:datasetName").Value;
+            clearDataSetOnStart = bool.Parse(configuration.GetSection("PushDataset:clearDataSetOnStart").Value);
+
             pbiHttpHelper = new PBIHTTPHelper(interactiveLogin: true);
 
             EnsurePBIPushDataSet().Wait();
@@ -378,6 +384,12 @@ namespace TracePost
             {
                 Console.WriteLine("Dataset already exists");
                 pushDatasetId = dataset["id"].Value<string>();
+
+                if (clearDataSetOnStart)
+                {
+                    await pbiHttpHelper.ExecutePBIRequest($"datasets/{pushDatasetId}/tables/{pushDatasetTableName}/rows", HttpMethod.Delete, CancellationToken.None, groupId: workspaceId);
+                }
+
                 return;
             }
 
