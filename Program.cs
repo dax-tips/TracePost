@@ -19,21 +19,32 @@ namespace TracePost
 {
     class Program
     {
+        /**********************************************************************************************
+            Open and edit the appsettings.json file to update the parameters
 
+            databaseToTrace : This is the connection string of the AS database you wish to trace
+                            : Example settings
+
+                            Data source=powerbi://api.powerbi.com/v1.0/myorg/Trace Post Demo;Initial catalog=AdventureWorksDW
+                            asazure://aspaaseastus2.asazure.windows.net/instancenamehere:rw
+
+            eventHubConnectionString : This is the End Point for the Azure Event HUB to post to.  
+
+            workspaceName   : This the the name of the workspace inside the tenant you wish to create the 
+                              streaming dataset. 
+
+                            : Example
+
+                            Trace Post Demo
+            
+        **********************************************************************************************/
         static string _sessionId;
         static HttpClient client = new HttpClient();
         static int BatchSleepTime = 5000;
         static int rowsPerPost = 500;
-        //private const string eventHubConnectionString = "[ENTER EVENTHUB ENDPOINT HERE IF USING STREAMING DATAFLOW]";
-        //private const string databaseToTrace = "[ENTER CONNECTION STRING]";
-        // eg. Data source=powerbi://api.powerbi.com/v1.0/myorg/Trace Post Demo;Initial catalog=AdventureWorksDW;
-        // eg. asazure://aspaaseastus2.asazure.windows.net/instancenamehere:rw
-        //private const string workspaceName="";
-
         private const string pushDatasetName = "ASTracePushDataset";
         private const string pushDatasetTableName = "Trace";
         private const string eventHubName = "tracepost";
-
         static string workspaceId;
         static string pushDatasetId;
 
